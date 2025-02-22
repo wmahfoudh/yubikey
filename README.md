@@ -1,116 +1,132 @@
 # The Ultimate YubiKey Masterclass – From Zero to Hero 🔐
 
-This comprehensive guide covers everything you need to know to master YubiKey security. It consolidates theory, practical use cases, advanced configurations, and enterprise deployment—all tailored for Arch Linux environments.
+*Everything you need to know to become a YubiKey power user*
 
 ---
 
 ## Table of Contents
 
-1. [Introduction](#introduction)
-2. [Understanding YubiKeys](#understanding-yubikeys)
-   - [What Is a YubiKey?](#what-is-a-yubikey)
-   - [Cryptographic Foundations](#cryptographic-foundations)
-3. [Core YubiKey Features & Real-World Usage](#core-features)
-   - [FIDO2 / WebAuthn – Passwordless & 2FA](#fido2--webauthn)
-   - [Smart Card (PIV) for Secure Logins](#smart-card-piv)
-   - [OpenPGP for Encryption, Signing & SSH](#openpgp)
-   - [OTP: TOTP/HOTP as Authenticator Replacement](#otp)
-   - [Challenge-Response for LUKS and KeepassXC](#challenge-response)
-4. [Advanced Configurations & Security Considerations](#advanced-configurations)
-   - [Static Password on Touch (HID Mode)](#static-password)
-   - [Using YubiKey for Full Disk Encryption (LUKS)](#luks)
-   - [Enabling PIN and Touch Policies](#pin-and-touch)
-   - [Troubleshooting & Maintenance](#troubleshooting)
-5. [Backup, Duplication & Recovery](#backup-and-duplication)
-6. [Practical Implementations with Real Services](#practical-implementations)
-7. [Enterprise Deployment & Custom Integrations](#enterprise-deployment)
-8. [Automation & Scripting for High-Security Workflows](#automation-scripting)
+1. [Introduction](README.md#introduction)
+2. [Understanding YubiKey](README.md#understanding-yubikey)
+   - [What Is a YubiKey?](README.md#what-is-a-yubikey)
+   - [Cryptographic Foundations](README.md#cryptographic-foundations)
+3. [Core Features & Real-World Usage](README.md#core-features--real-world-usage)
+   - [FIDO2 / WebAuthn – Passwordless & Two-Factor Authentication](README.md#fido2--webauthn)
+   - [Smart Card (PIV) for Secure Logins and SSH](README.md#smart-card-piv)
+   - [OpenPGP – Encryption, Signing & SSH](README.md#openpgp)
+   - [TOTP – Authenticator Replacement](README.md#totp)
+   - [Challenge-Response – For KeepassXC and LUKS](README.md#challenge-response)
+   - [Static Password on Touch – HID Emulation](README.md#static-password-on-touch)
+4. [Backup, Duplication & Recovery](README.md#backup-duplication--recovery)
+   - [General Backup Strategies](README.md#general-backup-strategies)
+   - [Duplicating Credentials for PIV, OpenPGP, TOTP & Challenge-Response](README.md#duplicating-credentials)
+   - [Resetting and Restoring YubiKeys](README.md#resetting-and-restoring-yubikeys)
+5. [Advanced Configurations & Security Considerations](README.md#advanced-configurations--security-considerations)
+   - [Configuring Multiple Security Modes](README.md#configuring-multiple-security-modes)
+   - [Full Disk Encryption with LUKS](README.md#full-disk-encryption-with-luks)
+   - [Protecting SSH Keys with Touch Authentication](README.md#protecting-ssh-keys-with-touch-authentication)
+   - [Advanced PIV Usage](README.md#advanced-piv-usage)
+6. [Practical Implementations with Real Services](README.md#practical-implementations-with-real-services)
+   - [FIDO2 / WebAuthn for Web Logins](README.md#fido2--webauthn-for-web-logins)
+   - [Using YubiKey for Windows and macOS Login](README.md#using-yubikey-for-windows-and-macos-login)
+   - [Integrating OpenPGP for Git Signing and Email Encryption](README.md#integrating-openpgp-for-git-signing-and-email-encryption)
+   - [TOTP for Two-Factor Authentication](README.md#totp-for-two-factor-authentication)
+   - [Challenge-Response with KeepassXC and LUKS](README.md#challenge-response-with-keepassxc-and-luks)
+7. [Troubleshooting & Maintenance](README.md#troubleshooting--maintenance)
+8. [Advanced Custom Setups, Scripting & Enterprise Deployments](README.md#advanced-custom-setups-scripting--enterprise-deployments)
+   - [Automating YubiKey Logins and Workflows](README.md#automating-yubikey-logins-and-workflows)
+   - [Enterprise Deployment and Multi-User Provisioning](README.md#enterprise-deployment-and-multi-user-provisioning)
+9. [Conclusion](README.md#conclusion)
 
 ---
 
-## Introduction 🚀
+## Introduction
 
-In an age when passwords alone cannot protect your digital life, YubiKeys offer hardware-based, multi-protocol authentication to secure your accounts and data. This guide is designed for users of Arch Linux (with additional notes for Windows and macOS) and covers—from initial setup to advanced enterprise deployments—all the knowledge you need to become a YubiKey power user.
-
----
-
-## Understanding YubiKeys
-
-### What Is a YubiKey? 🤔
-
-A **YubiKey** is a compact hardware security module that supports several authentication methods, including:
-- **FIDO2 / WebAuthn:** For passwordless login and two-factor authentication.
-- **Smart Card (PIV):** Used for certificate-based logins on Windows, macOS, and SSH.
-- **OpenPGP:** For GPG encryption, email signing, and Git commit signing.
-- **OTP (TOTP/HOTP):** To replace mobile authenticators like Google Authenticator.
-- **Challenge-Response:** For securing applications like LUKS full disk encryption and KeepassXC.
-
-### Cryptographic Foundations 🔒
-
-The security of a YubiKey is underpinned by robust cryptographic algorithms:
-
-| Feature               | Algorithms                        | Use Case                                     |
-|-----------------------|-----------------------------------|----------------------------------------------|
-| **FIDO2 / U2F**       | ECC (P-256, P-384), RSA-2048       | Passwordless login and 2FA                   |
-| **PIV (Smart Card)**  | RSA-2048, ECC (P-256, P-384)       | Secure SSH and Windows/macOS logins          |
-| **OpenPGP**           | RSA-4096, ECC                     | Email encryption, Git signing, SSH           |
-| **TOTP/HOTP**         | HMAC-SHA1 (RFC 4226/6238)         | Time-based or counter-based one-time codes     |
-| **Challenge-Response**| HMAC-SHA1                         | Applications like LUKS and KeepassXC         |
-| **Yubico OTP**        | AES-128 Challenge-Response        | Legacy OTP authentication                    |
+In today’s digital world, passwords alone are no longer enough. Phishing, keylogging, and weak passwords can jeopardize your security. **YubiKeys** provide robust, hardware-based authentication to protect your accounts and data. This masterclass covers everything from the cryptographic foundations to advanced enterprise integrations, ensuring you become a YubiKey power user. 🚀
 
 ---
 
-## Core YubiKey Features & Real-World Usage
+## Understanding YubiKey
 
-### FIDO2 / WebAuthn – Passwordless & 2FA 🌐
+### What Is a YubiKey?
 
-**Overview:**  
-FIDO2 allows you to log in without a password by using public-key cryptography. The YubiKey generates a key pair where the public key is registered with the service and the private key is securely stored on the device.
+A **YubiKey** is a hardware security module that supports multiple authentication methods:
 
-**Real-World Setup on Arch Linux:**
+- **FIDO2 / WebAuthn** (Passwordless login & 2FA)
+- **Smart Card (PIV) / PKI Authentication**
+- **OpenPGP (GPG Encryption & Signing)**
+- **TOTP/HOTP** (Replacing mobile authenticators)
+- **Challenge-Response** (For applications like LUKS and KeepassXC)
+- **Static Password on Touch** (HID keyboard emulation)
+
+### Cryptographic Foundations
+
+YubiKeys leverage strong cryptographic algorithms to secure your credentials:
+
+| **Feature**           | **Algorithms Used**                                    |
+|-----------------------|--------------------------------------------------------|
+| FIDO2 / U2F           | ECC (P-256, P-384), RSA-2048                           |
+| Smart Card (PIV)      | RSA-2048, ECC (P-256, P-384)                           |
+| OpenPGP               | RSA-4096, ECC                                          |
+| TOTP/HOTP             | HMAC-SHA1 (RFC 4226, RFC 6238)                           |
+| Challenge-Response    | HMAC-SHA1 (RFC 2104)                                   |
+| Yubico OTP            | AES-128 Challenge-Response                             |
+
+These algorithms help safeguard against phishing, keyloggers, and unauthorized access. 🔒
+
+---
+
+## Core Features & Real-World Usage
+
+### FIDO2 / WebAuthn
+
+**Use Case:** Secure logins for online services without relying on traditional passwords.
+
+- **Supported by:** Google, Microsoft, GitHub, Bitwarden, Facebook, Twitter, Dropbox
+- **Mobile Compatibility:**  
+  - **Android:** USB-C, NFC  
+  - **iPhone:** NFC or Lightning (YubiKey 5Ci)
+
+**Setup on Arch Linux:**
 
 ```sh
 sudo pacman -S libfido2
 fido2-token -L
 ```
 
-**Supported Services:**  
-Google, Microsoft, GitHub, GitLab, Bitwarden, Facebook, Twitter, Dropbox
-
 ---
 
-### Smart Card (PIV) for Secure Logins 🖥️
+### Smart Card (PIV)
 
-**Overview:**  
-Use your YubiKey as a hardware smart card for secure SSH, Windows, or macOS logins. The private keys are stored in the secure chip, never written to disk.
+**Use Case:** Use the YubiKey as a physical smart card for authentication on Windows, macOS, and SSH.
 
-**Example – SSH Authentication on Arch Linux:**
+- **Supported by:** Windows Login, macOS Login, SSH Authentication
+
+**Setup for SSH Authentication on Arch Linux:**
 
 ```sh
-sudo pacman -S yubikey-manager
 ykman piv keys generate 9a pubkey.pem
 ```
 
-Then, add the public key to your `~/.ssh/authorized_keys`.
+_Add the public key to `~/.ssh/authorized_keys` and authenticate using the YubiKey._
 
 ---
 
-### OpenPGP for Encryption, Signing & SSH ✉️
+### OpenPGP
 
-**Overview:**  
-YubiKey’s OpenPGP mode keeps your private GPG keys secure on the device, allowing you to sign emails, commits, and even use SSH authentication.
+**Use Case:** Encrypt emails, sign Git commits, and authenticate SSH.
 
-**Example – Git Signing Setup on Arch Linux:**
+- **Supported by:** ProtonMail, Thunderbird, GitHub, GitLab
+
+**Setup for Git Signing:**
 
 ```sh
-sudo pacman -S gnupg yubikey-manager
 gpg --card-edit
-# In the interactive prompt:
-# admin
-# keytocard
+admin
+keytocard
 ```
 
-Configure Git:
+Then configure Git:
 
 ```sh
 git config --global user.signingkey <GPG_KEY_ID>
@@ -119,280 +135,340 @@ git commit -S -m "Signed commit"
 
 ---
 
-### OTP: TOTP/HOTP as Authenticator Replacement ⏱️
+### TOTP
 
-**Overview:**  
-Replace mobile authenticators by storing TOTP/HOTP secrets on your YubiKey.
+**Use Case:** Replace mobile authenticators like Google Authenticator with YubiKey-managed codes.
 
-**Example – Adding a TOTP Account on Arch Linux:**
+- **Supported by:** Google, Facebook, Reddit, AWS, PayPal
+
+**Setup on Arch Linux:**
 
 ```sh
-sudo pacman -S yubikey-manager
 ykman oath accounts add google --secret <BASE32_SECRET>
 ykman oath code google
 ```
 
-Mobile users can use the Yubico Authenticator app (available for Android and iOS).
-
 ---
 
-### Challenge-Response for LUKS and KeepassXC 🔑
+### Challenge-Response
 
-**Overview:**  
-Use the YubiKey to generate a challenge-response hash for unlocking encrypted disks (LUKS) or accessing password managers (KeepassXC).
+**Use Case:** Enhance security for applications like KeepassXC and LUKS full disk encryption.
 
-**Example – Setting Up for KeepassXC on Arch Linux:**
+**Setup for KeepassXC:**
 
 ```sh
 ykman otp chalresp --touch --generate 2
 ```
 
-Then, configure KeepassXC to use YubiKey challenge-response by selecting the appropriate slot.
+_Then, within KeepassXC, add the challenge-response entry from YubiKey Slot 2._
 
 ---
 
-## Advanced Configurations & Security Considerations
+### Static Password on Touch
 
-### Static Password on Touch (HID Mode) ⌨️
-
-**Overview:**  
-Program your YubiKey to emulate a USB keyboard that types a stored static password when touched. This is useful for legacy systems.
-
-**Configuration Example on Arch Linux:**
-
-```sh
-ykman otp static --keyboard-layout us 1
-# When prompted, enter your custom static password.
-```
-
-Generate a random 32-character password for the second slot:
-
-```sh
-ykman otp static --generate 2 --length 32
-```
-
-**Security Note:**  
-Combine with a manually typed prefix to mitigate keylogger risks.
-
----
-
-### Using YubiKey for Full Disk Encryption (LUKS) 💽
-
-**Overview:**  
-Bind your LUKS passphrase with YubiKey challenge-response so that unlocking the disk requires both the YubiKey and a passphrase.
+**Use Case:** Use YubiKey as a secure HID device that types a stored password when touched. Ideal for legacy systems that do not support modern MFA methods.
 
 **Configuration on Arch Linux:**
 
-1. Set up challenge-response on Slot 2:
+- **Set a custom static password for Slot 1:**
 
-    ```sh
-    ykman otp chalresp --touch --generate 2
-    ```
+  ```sh
+  ykman otp static --keyboard-layout us 1
+  ```
+  
+- **Generate a random static password for Slot 2:**
 
-2. Configure LUKS to use the YubiKey (for example, using a tool like `ykfde-enroll`):
+  ```sh
+  ykman otp static --generate 2 --length 32
+  ```
 
-    ```sh
-    ykfde-enroll /dev/sdX
-    ```
+- **Review slot configuration:**
+
+  ```sh
+  ykman otp info
+  ```
+
+*Security Note:* Consider combining a manually typed prefix with the static password stored on the YubiKey for added security. 🔑
 
 ---
 
-### Enabling PIN and Touch Policies 🔐
+## Backup, Duplication & Recovery
 
-Enhance security by requiring physical touch or a PIN before use.
+### General Backup Strategies
 
-- **FIDO2 PIN Change:**
+- **Always register at least two YubiKeys per account.**
+- **For FIDO2 accounts:** Register multiple keys directly.
+- **For Smart Card (PIV) and OpenPGP:** Duplicate keys and certificates across devices.
+- **For TOTP and Challenge-Response:** Store the same secret on multiple YubiKeys.
 
-  ```sh
-  ykman fido access change-pin
-  ```
+### Duplicating Credentials
 
-- **Set Touch Requirement for OpenPGP:**
-
-  ```sh
-  ykman openpgp keys set-touch aut on
-  ```
-
-- **Require Touch for PIV (Smart Card) Authentication:**
+- **PIV (Smart Card):**
 
   ```sh
-  ykman piv set-touch-policy 9a always
+  ykman piv keys generate --algorithm RSA2048 9a primary-pubkey.pem
+  ykman piv certificates export 9a primary-cert.pem
+  # On the backup key:
+  ykman piv keys import 9a primary-key.pem
+  ykman piv certificates import 9a primary-cert.pem
   ```
 
----
+- **OpenPGP:**
 
-### Troubleshooting & Maintenance 🛠️
+  ```sh
+  gpg --export-secret-keys --armor > master-key.asc
+  # Import and move keys to the backup YubiKey:
+  gpg --import master-key.asc
+  gpg --edit-key <YOUR_KEY_ID>
+  keytocard
+  ```
 
-**Resetting YubiKey Components:**
+- **TOTP:**
 
-- **Factory Reset (All Data Erased):**
+  ```sh
+  ykman oath accounts add my-service --secret <TOTP_SECRET>
+  ```
+
+- **Challenge-Response:**
+
+  ```sh
+  ykman otp chalresp --touch --generate 2
+  # Copy the same secret to the backup key:
+  ykman otp chalresp --touch 2
+  ```
+
+### Resetting and Restoring YubiKeys
+
+- **Factory Reset (Erases All Data):**
 
   ```sh
   ykman reset
   ```
 
-- **Reset PIV Module:**
+- **Reset Individual Components:**
+
+  - OpenPGP:
+
+    ```sh
+    ykman openpgp reset
+    ```
+
+  - PIV:
+
+    ```sh
+    ykman piv reset
+    ```
+
+  - FIDO2:
+
+    ```sh
+    ykman fido reset
+    ```
+
+  - OTP Slots:
+
+    ```sh
+    ykman otp delete 1
+    ykman otp delete 2
+    ```
+
+---
+
+## Advanced Configurations & Security Considerations
+
+### Configuring Multiple Security Modes
+
+Your YubiKey can support several functions simultaneously. To tailor its functionality:
+
+- **List current configurations:**
+
+  ```sh
+  ykman config list
+  ```
+
+- **Enable FIDO2 and PIV while disabling OTP:**
+
+  ```sh
+  ykman config usb --enable FIDO2,PIV --disable OTP
+  ```
+
+*Benefit:* Reducing enabled features minimizes the attack surface. 👍
+
+### Full Disk Encryption with LUKS
+
+Bind your LUKS-encrypted disk to your YubiKey using challenge-response:
+
+1. **Install dependencies on Arch Linux:**
+
+   ```sh
+   sudo pacman -S yubikey-luks
+   ```
+
+2. **Add a YubiKey-secured slot to LUKS:**
+
+   ```sh
+   sudo cryptsetup luksAddKey /dev/sdX --key-file <(ykchalresp -2)
+   ```
+
+3. **At boot, insert the YubiKey to unlock the disk.**
+
+*Note:* Losing the YubiKey can lock you out; maintain a backup secret.
+
+### Protecting SSH Keys with Touch Authentication
+
+Ensure your YubiKey requires physical touch before using stored SSH keys:
+
+```sh
+ykman piv set-touch-policy 9a always
+```
+
+### Advanced PIV Usage
+
+- **Understanding PIV PINs:**
+  - **PIN:** A 6-digit code to authenticate.
+  - **PUK:** An 8-digit reset code.
+  - **Management Key:** A 24-byte key for administrative tasks.
+
+- **Reset PIV PIN if needed:**
+
+  ```sh
+  ykman piv access unblock-pin
+  ```
+
+- **Factory Reset the PIV Module:**
 
   ```sh
   ykman piv reset
   ```
 
-- **Reset FIDO2 Module:**
+---
+
+## Practical Implementations with Real Services
+
+### FIDO2 / WebAuthn for Web Logins
+
+1. **On Supported Websites (e.g., Google, GitHub):**
+   - Navigate to security settings.
+   - Register your YubiKey as a security key.
+   - Save recovery codes.
+
+2. **Mobile Usage:**
+   - **Android:** Tap via NFC.
+   - **iPhone:** Use NFC or the Lightning connector with YubiKey 5Ci.
+
+### Using YubiKey for Windows and macOS Login
+
+- **For Windows:**
+  - Install Yubico PIV Manager.
+  - Generate a PIV key:
+
+    ```sh
+    ykman piv keys generate 9a pubkey.pem
+    ykman piv certificates generate 9a pubkey.pem
+    ```
+
+  - Import the certificate into Windows via MMC.
+
+- **For macOS:**
+  - Follow similar steps using certificate-based authentication.
+
+### Integrating OpenPGP for Git Signing and Email Encryption
+
+1. **Move your GPG key to the YubiKey:**
+
+   ```sh
+   gpg --card-edit
+   admin
+   keytocard
+   ```
+
+2. **Configure Git to sign commits:**
+
+   ```sh
+   git config --global user.signingkey <GPG_KEY_ID>
+   git commit -S -m "Signed commit"
+   ```
+
+### TOTP for Two-Factor Authentication
+
+1. **Add your TOTP account:**
+
+   ```sh
+   ykman oath accounts add google --secret <BASE32_SECRET>
+   ```
+
+2. **Generate codes as needed:**
+
+   ```sh
+   ykman oath code google
+   ```
+
+*Tip:* Use Yubico Authenticator on mobile devices.
+
+### Challenge-Response with KeepassXC and LUKS
+
+- **For KeepassXC:**
 
   ```sh
-  ykman fido reset
+  ykman otp chalresp --touch --generate 2
   ```
 
-- **Reset OTP Slots:**
+  _Then configure within KeepassXC._
 
-  ```sh
-  ykman otp delete 1
-  ykman otp delete 2
-  ```
-
-**If GPG does not detect your YubiKey:**
-
-```sh
-gpgconf --kill gpg-agent
-gpg --card-status
-```
-
-For connectivity issues on Arch Linux, check system logs:
-
-```sh
-journalctl -u systemd-udevd | grep -i yubikey
-```
+- **For LUKS Disk Encryption:**
+  - Follow the full disk encryption steps detailed earlier.
 
 ---
 
-## Backup, Duplication & Recovery 💾
+## Troubleshooting & Maintenance
 
-**Why Backup?**  
-Relying on a single YubiKey poses a risk. Duplicate configurations for PIV, OpenPGP, TOTP, and Challenge-Response to prevent account lockouts.
+### Common Issues
 
-**Duplication Strategies:**
+- **YubiKey Not Detected:**
+  - Check USB connections or try a different port.
+  - Restart the PC/SC daemon:
 
-- **FIDO2:** Cannot be duplicated; register multiple keys with your accounts.
-- **PIV (Smart Card):** Generate and import identical keys across multiple YubiKeys.
-- **OpenPGP:** Export and import your secret key and move it to additional devices.
-- **TOTP:** Manually add the same secret to multiple YubiKeys.
-- **Challenge-Response:** Copy the generated secret between devices.
+    ```sh
+    sudo systemctl restart pcscd
+    ```
 
-**Resetting Individual Components:**
+  - Review system logs:
 
-- **OpenPGP Reset:**
+    ```sh
+    dmesg | grep -i yubikey
+    ```
 
-  ```sh
-  ykman openpgp reset
-  ```
+- **FIDO2/WebAuthn Issues in Browsers:**
+  - Ensure WebAuthn is enabled in your browser’s settings.
+  - Reload udev rules on Arch Linux:
 
-- **PIV Reset:**
+    ```sh
+    sudo udevadm control --reload-rules && sudo udevadm trigger
+    ```
 
-  ```sh
-  ykman piv reset
-  ```
+- **SSH Authentication Failures:**
+  - Restart the GPG agent:
 
-- **FIDO2 Reset:**
+    ```sh
+    gpgconf --kill gpg-agent
+    export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+    ```
+  - Add your YubiKey public key:
 
-  ```sh
-  ykman fido reset
-  ```
+    ```sh
+    ssh-keygen -D /usr/lib/libykcs11.so >> ~/.ssh/authorized_keys
+    ```
 
----
-
-## Practical Implementations with Real Services 🌍
-
-**FIDO2 / WebAuthn for Websites:**
-
-- **Setup:**  
-  Register your YubiKey as a security key in your account’s security settings (Google, GitHub, Microsoft, etc.).
-  
-- **Mobile Usage:**  
-  Android (via NFC or USB-C) and iPhone (Lightning port or NFC) support YubiKey authentication.
-
-**Smart Card (PIV) for Windows and SSH:**
-
-- **Windows Login Example:**
-
-  ```sh
-  # On Arch Linux, use YubiKey Manager to generate a key:
-  ykman piv keys generate 9a pubkey.pem
-  ```
-
-  Import the generated certificate into Windows via MMC and enable Smart Card Login.
-
-**OpenPGP for Email and Git:**
-
-- Follow the GPG setup and then configure your email client or Git to use the YubiKey-stored keys.
-
-**TOTP for Two-Factor Authentication:**
-
-- Add your service’s TOTP secret to the YubiKey using:
-
-  ```sh
-  ykman oath accounts add <service> --secret <BASE32_SECRET>
-  ```
-
-**Challenge-Response for KeepassXC and LUKS:**
-
-- Configure your password manager or disk encryption tool to use the response from your YubiKey.
+- **Resetting Components:**
+  - Use the appropriate `ykman` reset commands as needed (see Backup & Recovery section).
 
 ---
 
-## Enterprise Deployment & Custom Integrations 🏢
+## Advanced Custom Setups, Scripting & Enterprise Deployments
 
-For businesses and advanced users, YubiKey can be deployed at scale for robust enterprise security.
+### Automating YubiKey Logins and Workflows
 
-### Multi-User Provisioning
-
-- **Bulk Enrollment:**  
-  Use scripts to pre-configure YubiKeys with static passwords, PIV keys, and OTP settings.
-  
-  ```sh
-  # Example enrollment snippet:
-  ykman otp static --generate 1 --length 32
-  ykman piv keys generate -a RSA2048 9a public.pem
-  ykman piv certificates generate --subject "CN=UserName" 9a public.pem
-  ```
-
-- **Active Directory Integration:**  
-  Enforce smart card authentication via Group Policy. Import YubiKey certificates for each user.
-
-  **Useful Link:**  
-  [Yubico Login for Windows](https://www.yubico.com/products/services-software/download/yubico-login-for-windows/)
-
-### VPN and Cloud Authentication
-
-- **VPN:**  
-  Configure OpenVPN to use PKCS#11 with YubiKey for secure remote access.
-
-  ```sh
-  sudo pacman -S openvpn opensc
-  openvpn --show-pkcs11-ids /usr/lib/opensc-pkcs11.so
-  ```
-
-  Edit your OpenVPN config accordingly.
-
-- **Cloud Services:**  
-  Enable YubiKey-based MFA for AWS, Google Cloud, or Azure through their respective security settings.
-
-### Custom Scripting and Automation
-
-Automate routine authentication tasks and workflows using shell scripts. For example, auto-copy an OTP to the clipboard upon YubiKey insertion:
-
-```sh
-echo 'ACTION=="add", ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0407", RUN+="/usr/bin/ykman otp code 1 | xclip -selection clipboard"' | sudo tee /etc/udev/rules.d/99-yubikey.rules
-sudo udevadm control --reload-rules && sudo udevadm trigger
-```
-
----
-
-## Automation & Scripting for High-Security Workflows 🤖
-
-Enterprise users can integrate YubiKey operations into CI/CD pipelines, secure API requests, and automated SSH logins.
-
-- **SSH Automation:**  
-  Generate a resident FIDO2 SSH key:
+- **SSH Auto-Login with YubiKey (FIDO2 SSH Key):**
 
   ```sh
   ssh-keygen -t ed25519-sk -O resident -O verify-required -f ~/.ssh/id_yubikey
@@ -401,24 +477,115 @@ Enterprise users can integrate YubiKey operations into CI/CD pipelines, secure A
   ssh user@server.com
   ```
 
-- **API Authentication:**  
-  Replace API keys with YubiKey-based signatures to protect sensitive operations.
+- **Auto-type Static Password (Linux Automation):**
 
-- **Enterprise Scripting:**  
-  Develop custom scripts to manage bulk provisioning, key rotation, and automated failover in multi-user environments.
+  Create a udev rule to copy an OTP to your clipboard:
+
+  ```sh
+  echo 'ACTION=="add", ATTRS{idVendor}=="1050", ATTRS{idProduct}=="0407", RUN+="/usr/bin/ykman otp code 1 | xclip -selection clipboard"' | sudo tee /etc/udev/rules.d/99-yubikey.rules
+  sudo udevadm control --reload-rules && sudo udevadm trigger
+  ```
+
+- **Windows Auto-Login via PowerShell:**
+
+  ```powershell
+  Get-Content "C:\yubikey_otp.txt" | Set-Clipboard
+  ```
+
+### Enterprise Deployment and Multi-User Provisioning
+
+- **YubiKey with Active Directory:**
+  - Install YubiKey smart card middleware (use the official Yubico tools).
+  - In Group Policy, enable “Interactive logon: Require smart card.”
+  - Issue smart card certificates via AD Certificate Services.
+
+- **Linux LDAP Authentication with YubiKey:**
+  - Install the PAM module:
+
+    ```sh
+    sudo pacman -S libpam-yubico
+    ```
+
+  - Configure PAM (e.g., edit `/etc/pam.d/sshd`) to include:
+
+    ```sh
+    auth required pam_yubico.so id=16 debug authfile=/etc/yubikey_mappings
+    ```
+
+- **VPN Authentication with YubiKey:**
+  - Install OpenVPN and OpenSC:
+
+    ```sh
+    sudo pacman -S openvpn opensc
+    ```
+
+  - Identify your YubiKey’s PKCS#11 ID:
+
+    ```sh
+    openvpn --show-pkcs11-ids /usr/lib/opensc-pkcs11.so
+    ```
+
+  - Modify your OpenVPN config to include the PKCS#11 settings.
+
+### Custom Shell Scripting for YubiKey Workflows
+
+- **Auto-Generate OTP on Demand:**
+
+  Create a script (`otp.sh`):
+
+  ```sh
+  #!/bin/bash
+  echo "Generating OTP..."
+  ykman otp code 2 | xclip -selection clipboard
+  notify-send "OTP Copied!"
+  ```
+
+- **Automate Git Commit Signing:**
+
+  Configure Git globally to sign commits:
+
+  ```sh
+  git config --global user.signingkey YOUR_KEY_ID
+  git config --global commit.gpgsign true
+  ```
+
+### Enterprise-Grade Security with YubiHSM
+
+- **Using YubiHSM for Key Storage:**
+
+  ```sh
+  sudo pacman -S yubihsm-shell
+  yubihsm-shell -a set-authkey -i 1 -p "supersecurepassword"
+  ssh-keygen -t rsa -b 4096
+  yubihsm-shell -a import-object -i 0x1234 -k ssh_key.pem
+  ```
+
+- **Automating API Authentication with YubiKey:**
+
+  Generate a FIDO2-backed API key:
+
+  ```sh
+  ykman fido credentials generate --pin
+  ```
+
+  Then use it in API requests:
+
+  ```sh
+  curl -H "Authorization: Bearer $(ykman fido sign)" https://api.example.com/secure-data
+  ```
 
 ---
 
-## Final Thoughts ✨
+## Conclusion
 
-By following this guide, you now have the knowledge to:
+This masterclass has taken you from the basics of YubiKey technology to advanced configurations, troubleshooting, and enterprise-level deployments. You now understand:
 
-- Understand the underlying cryptographic mechanisms of YubiKey.
-- Configure and deploy multiple authentication methods—FIDO2, PIV, OpenPGP, OTP, and Challenge-Response.
-- Convert all instructions for use on Arch Linux using `pacman` instead of Ubuntu’s `apt`.
-- Implement robust backup, duplication, and recovery strategies.
-- Deploy YubiKey in both personal and enterprise environments with custom automation and scripting.
+- The **cryptographic foundations** behind YubiKey’s diverse authentication methods.
+- How to implement **FIDO2, Smart Card (PIV), OpenPGP, TOTP, Challenge-Response, and Static Password** functionalities.
+- Strategies for **backup, duplication, and recovery**.
+- Advanced techniques for **securing SSH, full disk encryption, and enterprise integration**.
+- Custom automation and scripting to streamline your security workflows.
 
-Secure your digital life and enterprise systems with YubiKey, and always maintain redundancy to protect against loss.
+By leveraging these techniques on Arch Linux (and other systems), you can significantly enhance your digital security posture. Now, go forth and secure your digital life with YubiKey! 🚀🔐
 
-Happy securing! 🎉
+Enjoy your journey to becoming a YubiKey power user!

@@ -1,4 +1,3 @@
-
 # 📌 Introduction
 
 You have purchased **YubiKey 5C** devices, and instead of just following tutorials, you want a deep understanding of their **technologies, cryptographic foundations, and practical use cases** before deploying them. This training will provide an **in-depth, structured learning path** focusing on both theory and implementation.

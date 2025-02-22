@@ -1,4 +1,4 @@
-# The Ultimate YubiKey Masterclass – From Zero to Hero 🔐
+# The Ultimate YubiKey 5 Masterclass – From Zero to Hero 🔐
 
 *Everything you need to know to become a YubiKey power user*
 

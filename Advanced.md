@@ -1,3 +1,5 @@
+# Advanced
+
 ## **🔹 Phase 4: Advanced YubiKey Configurations & Security Considerations**
 
 At this point, you understand the cryptographic foundations and practical applications of your **YubiKey 5C**. Now, we will explore **advanced configurations**, **security best practices**, and **troubleshooting**.

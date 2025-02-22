@@ -201,15 +201,3 @@ Check FIDO2 logs:
 ```sh
 journalctl -u systemd-udevd | grep -i yubikey
 ```
-
----
-
-## **🔹 Final Thoughts & Action Plan**
-
-### **What We've Seen**
-
-✅ The cryptographic foundations of **YubiKey technologies**.  
-✅ How to use **FIDO2, OpenPGP, OTP, and Smart Card authentication**.  
-✅ Advanced **security configurations** to harden your YubiKey usage.  
-✅ **Threat modeling** to prevent loss, phishing, and MITM attacks.  
-✅ **Troubleshooting techniques** for common issues.

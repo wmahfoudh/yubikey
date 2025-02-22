@@ -4,13 +4,13 @@ This repository contains structured documentation on YubiKey 5C, covering its te
 
 ## 📖 Table of Contents  
 
-- 📌 [Introduction](./1 - Intro.md)  
-- ⚙️ [Advanced Configurations](./2 - Advanced.md)  
-- 🛠️ [Additional Functionalities](./3 - Additional Functionalities.md)  
-- 🔄 [Backup & Recovery](./4 - Recovery.md)  
-- 🌍 [Practical Implementation](./5 - Practical Implementation.md)  
-- 🐞 [Troubleshooting & Maintenance](./6 - Troubleshooting.md)  
-- 🖥️ [Custom Setups & Enterprise Use](./7 - Custom Setups.md)  
+- 📌 [Introduction](./1%20-%20Intro.md)  
+- ⚙️ [Advanced Configurations](./2%20-%20Advanced.md)  
+- 🛠️ [Additional Functionalities](./3%20-%20Additional%20Functionalities.md)  
+- 🔄 [Backup & Recovery](./4%20-%20Recovery.md)  
+- 🌍 [Practical Implementation](./5%20-%20Practical%20Implementation.md)  
+- 🐞 [Troubleshooting & Maintenance](./6%20-%20Troubleshooting.md)  
+- 🖥️ [Custom Setups & Enterprise Use](./7%20-%20Custom%20Setups.md)  
 
 ## 📂 Overview  
 
